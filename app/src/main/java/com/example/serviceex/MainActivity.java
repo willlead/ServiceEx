@@ -30,6 +30,7 @@ public class MainActivity extends AppCompatActivity {
                 }else {
                     startService(intent); //오레오 이하는 백그라운드 서비스 사용
                 }
+                finish();
             }
         });
 

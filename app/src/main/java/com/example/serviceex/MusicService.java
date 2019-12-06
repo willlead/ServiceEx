@@ -8,10 +8,12 @@ import android.app.Service;
 import android.content.ComponentName;
 import android.content.Context;
 import android.content.Intent;
+import android.graphics.BitmapFactory;
 import android.media.MediaPlayer;
 import android.os.Build;
 import android.os.IBinder;
 import android.widget.RemoteViews;
+import android.widget.Toast;
 
 import androidx.core.app.NotificationCompat;
 
@@ -19,6 +21,12 @@ public class MusicService extends Service {
     MediaPlayer mp;
 
     public MusicService() {
+    }
+
+    @Override
+    public void onCreate() {
+        super.onCreate();
+        startForegroundService();
     }
 
     @Override
@@ -45,6 +53,13 @@ public class MusicService extends Service {
 
     @Override
     public ComponentName startForegroundService(Intent service) {
+        Toast.makeText(this, "override startForegroundService ", Toast.LENGTH_SHORT).show();
+        return super.startForegroundService(service);
+    }
+
+    public void startForegroundService() {
+
+        Toast.makeText(this, "My startForegroundService", Toast.LENGTH_SHORT).show();
         Intent notiIntent = new Intent(this, MainActivity.class);
 
         //노티 인텐트는 pendingintent 이다.
@@ -54,13 +69,17 @@ public class MusicService extends Service {
 
         if (Build.VERSION.SDK_INT >= 26) {
             String channelID = "MusicServiceChannel";
-            NotificationChannel channel = new NotificationChannel(channelID,"음악 채널",
+            NotificationChannel channel = new NotificationChannel(channelID, "음악 채널",
                     NotificationManager.IMPORTANCE_DEFAULT);
-            ((NotificationManager)getSystemService(Context.NOTIFICATION_SERVICE)).createNotificationChannel(channel);
+            ((NotificationManager) getSystemService(Context.NOTIFICATION_SERVICE)).createNotificationChannel(channel);
             builder = new NotificationCompat.Builder(this, channelID);
         } else {
             builder = new NotificationCompat.Builder(this);
         }
-        return super.startForegroundService(service);
+        builder.setSmallIcon(R.drawable.bob)
+                .setLargeIcon(BitmapFactory.decodeResource(getResources(), R.drawable.bob))
+                .setContent(remoteViews)
+                .setContentIntent(pIntent);
+        startForeground(1, builder.build());
     }
 }
