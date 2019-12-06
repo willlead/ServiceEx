@@ -19,11 +19,11 @@ import android.view.View;
 import android.widget.Button;
 
 public class MainActivity extends AppCompatActivity {
-    Button btnNoti;
     final int SDK_VER_OREO = 26;
 
-    //    NotificationChannel channel;
-//    NotificationManager notiManager;
+    Button btnNoti;
+    NotificationCompat.Builder mBuilder;
+
     @RequiresApi(api = Build.VERSION_CODES.O)
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -55,19 +55,13 @@ public class MainActivity extends AppCompatActivity {
         btnNoti.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                /*if (Build.VERSION.SDK_INT >= SDK_VER_OREO) {
-                    NotificationCompat.Builder mBulider = new NotificationCompat.Builder(MainActivity.this, "noti")
-                            .setSmallIcon(R.drawable.end)
-                            .setContentTitle("공지사항")
-                            .setContentText("내일은 노티활용편입니다.");
+                if (Build.VERSION.SDK_INT >= SDK_VER_OREO) {
+                    mBuilder = new NotificationCompat.Builder(MainActivity.this, "noti");
+                } else {
+                    mBuilder = new NotificationCompat.Builder(MainActivity.this);
                 }
-                else
-                {
-                    NotificationCompat.Builder mBulider = new NotificationCompat.Builder(MainActivity.this);
-                }*/
                 Bitmap largeIcon = BitmapFactory.decodeResource(getResources(), R.drawable.end);
-                NotificationCompat.Builder mBulider = new NotificationCompat.Builder(MainActivity.this, "noti")
-                        .setSmallIcon(R.drawable.end) // 스테터스바에 아이콘
+                mBuilder.setSmallIcon(R.drawable.end) // 스테터스바에 아이콘
                         .setContentTitle("공지사항")
                         .setContentText("내일은 노티활용편입니다.")
                         .setLargeIcon(largeIcon) //
@@ -75,7 +69,7 @@ public class MainActivity extends AppCompatActivity {
                         .setAutoCancel(true)
                         .setPriority(NotificationCompat.PRIORITY_DEFAULT) // 중요도
                         .setContentIntent(pIntent); //노티를 눌렀을때 실행할 액티비티 *중요*
-                notiManager.notify(0,mBulider.build());
+                notiManager.notify(0, mBuilder.build());
 
             }
         });
